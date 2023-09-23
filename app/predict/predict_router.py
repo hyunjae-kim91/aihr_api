@@ -1,11 +1,15 @@
-import numpy as np
+import json
 import joblib
+from datetime import datetime
+import numpy as np
 from pydantic import BaseModel, Field
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from app.utils.logger_utils import Logger
 
 
 router = APIRouter()
-loaded_model = joblib.load('models/model.pkl')
+MODEL = joblib.load('models/model.pkl')
+LOGGER = Logger()
 
 
 class InputModel(BaseModel):
@@ -39,12 +43,30 @@ class OutputModel(BaseModel):
 
 
 @router.post("/predict", response_model=OutputModel)
-async def predict_wating_time(payload: InputModel) -> float:
+async def predict_wating_time(
+    payload: InputModel,
+    request: Request
+    ) -> float:
     """predict waiting time router"""
-    payload_values = list(payload.__dict__.values())
+    data = payload.__dict__
+    uuid = request.cookies["visitor_id"]
+    await logging(data, uuid)
+    # make input data
+    payload_values = list(data.values())
     input_data = np.array([payload_values])
-    predict = loaded_model.predict(
+    # execute predict
+    predict = MODEL.predict(
         input_data,
-        num_iteration=loaded_model.best_iteration
+        num_iteration=MODEL.best_iteration
         )
-    return {"predict": predict[0]}
+    response_body = {"predict": predict[0]}
+    return response_body
+
+
+async def logging(data: dict, uuid: str) -> None:
+    """logging json body"""
+    data["uuid"] = uuid
+    data["timestamp"] = str(datetime.now())
+    LOGGER().info(json.dumps(data, ensure_ascii=False))
+    data.pop("uuid")
+    data.pop("timestamp")
