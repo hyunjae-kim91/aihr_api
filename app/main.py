@@ -1,4 +1,5 @@
 import time
+import uuid
 from dataclasses import dataclass, asdict
 from fastapi import  FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,9 +30,10 @@ app.add_middleware(
 @app.middleware("http")
 async def add_trace_code_header(request: Request, call_next):
     """uuid를 trace code로 발급"""
+    trace_code = str(uuid.uuid4())
+    request.state.trace_code = trace_code
     response = await call_next(request)
-    print(request.cookies["visitor_id"])
-    response.headers["X-Trace-Code"] = request.cookies["visitor_id"]
+    response.headers["X-Trace-Code"] = trace_code
     return response
 
 

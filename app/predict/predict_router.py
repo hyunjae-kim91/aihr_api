@@ -48,11 +48,11 @@ async def predict_wating_time(
     request: Request
     ) -> float:
     """predict waiting time router"""
-    data = payload.__dict__
-    uuid = request.cookies["visitor_id"]
-    await logging(data, uuid)
+    request_body = payload.__dict__
+    trace_code = request.state.trace_code
+    await logging("request", request_body, trace_code)
     # make input data
-    payload_values = list(data.values())
+    payload_values = list(request_body.values())
     input_data = np.array([payload_values])
     # execute predict
     predict = MODEL.predict(
@@ -60,13 +60,16 @@ async def predict_wating_time(
         num_iteration=MODEL.best_iteration
         )
     response_body = {"predict": predict[0]}
+    await logging("response", response_body, trace_code)
     return response_body
 
 
-async def logging(data: dict, uuid: str) -> None:
+async def logging(division: str, data: dict, trace_code: str) -> None:
     """logging json body"""
-    data["uuid"] = uuid
+    data["trace_code"] = trace_code
     data["timestamp"] = str(datetime.now())
-    LOGGER().info(json.dumps(data, ensure_ascii=False))
-    data.pop("uuid")
+    LOGGER().info(
+        f"{division}: {json.dumps(data, ensure_ascii=False)}"
+        )
+    data.pop("trace_code")
     data.pop("timestamp")
