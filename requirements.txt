@@ -9,3 +9,4 @@ alembic==1.7.5
 pytest==7.0.1
 bcrypt==3.2.0
 python-multipart==0.0.5
+lightgbm==4.1.0
