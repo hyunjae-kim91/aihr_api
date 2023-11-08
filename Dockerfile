@@ -12,4 +12,4 @@ RUN mkdir -p logs
 
 # run service
 RUN chmod 777 run.sh
-CMD ./run.sh
+CMD bash run.sh
