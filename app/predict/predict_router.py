@@ -32,7 +32,7 @@ class InputModel(BaseModel):
 
 class OutputModel(BaseModel):
     """response body"""
-    predict: float = Field(
+    predict: int = Field(
         600,
         description="wating time predict result"
         )
@@ -54,10 +54,9 @@ async def predict_wating_time(
         input_data,
         num_iteration=MODEL.best_iteration
         )
-    lambda_value = 0.3229772566823217
-    prediction = inv_boxcox(predict[0], lambda_value)
-
+    prediction = transform_boxcox(predict)
     response_body = {"predict": prediction}
+    
     await logging("response", response_body, trace_code)
     return response_body
 
@@ -71,3 +70,10 @@ async def logging(division: str, data: dict, trace_code: str) -> None:
         )
     data.pop("trace_code")
     data.pop("timestamp")
+
+def transform_boxcox(predict):
+    lambda_value = 0.3229772566823217
+    predict_boxcox = inv_boxcox(predict[0], lambda_value)
+    prediction = int(predict_boxcox)
+    return prediction
+    
