@@ -3,40 +3,15 @@ import joblib
 from datetime import datetime
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel, Field
 from fastapi import APIRouter, Request
-from scipy.special import inv_boxcox
 
+from app.models.model import InputModel, OutputModel
 from app.utils.logger_utils import Logger
-
+from app.utils.transform_data import transform_boxcox, transform_dataframe
 
 router = APIRouter()
 MODEL = joblib.load('models/model_lgbm.pkl')
 LOGGER = Logger()
-
-
-class InputModel(BaseModel):
-    """input parameter"""
-    plantcode_L: int = Field(default=0)
-    week_no: int = Field(default=36)
-    waitingno: int = Field(default=73)
-    week_int: int = Field(default=1)
-    dayno: int = Field(default=7)
-    daytype: int = Field(default=2)
-    regihour: int = Field(default=11)
-    regiminute: int = Field(default=30)
-    regisecond: int = Field(default=44735)
-    teamahead: int = Field(default=6)
-    customercnt: int = Field(default=2)
-    customergroupcnt: int = Field(default=2)
-
-class OutputModel(BaseModel):
-    """response body"""
-    predict: int = Field(
-        600,
-        description="wating time predict result"
-        )
-
 
 @router.post("/predict", response_model=OutputModel)
 async def predict_wating_time(
@@ -48,13 +23,13 @@ async def predict_wating_time(
     trace_code = request.state.trace_code
     await logging("request", request_body, trace_code)
     # make input data   
-    input_data = pd.DataFrame([request_body])
+    input_data = await transform_dataframe(request_body)
     # execute predict
     predict = MODEL.predict(
         input_data,
         num_iteration=MODEL.best_iteration
         )
-    prediction = transform_boxcox(predict)
+    prediction = await transform_boxcox(predict)
     response_body = {"predict": prediction}
     
     await logging("response", response_body, trace_code)
@@ -70,10 +45,3 @@ async def logging(division: str, data: dict, trace_code: str) -> None:
         )
     data.pop("trace_code")
     data.pop("timestamp")
-
-def transform_boxcox(predict):
-    lambda_value = 0.3229772566823217
-    predict_boxcox = inv_boxcox(predict[0], lambda_value)
-    prediction = int(predict_boxcox)
-    return prediction
-    
