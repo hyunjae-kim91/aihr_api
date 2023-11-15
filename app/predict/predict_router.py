@@ -2,7 +2,6 @@ import json
 import joblib
 from datetime import datetime
 import numpy as np
-import pandas as pd
 from fastapi import APIRouter, Request
 
 from app.models.model import InputModel, OutputModel
@@ -18,19 +17,21 @@ async def predict_wating_time(
     payload: InputModel,
     request: Request
     ) -> float:
-    """predict waiting time router"""
     request_body = payload.__dict__
     trace_code = request.state.trace_code
     await logging("request", request_body, trace_code)
-    # make input data   
     input_data = await transform_dataframe(request_body)
-    # execute predict
     predict = MODEL.predict(
         input_data,
         num_iteration=MODEL.best_iteration
         )
     prediction = await transform_boxcox(predict)
-    response_body = {"predict": prediction}
+    response_body = {
+        "resultFlag": True,
+        "resultData": prediction,
+        "errCode": 'null',
+        "errMessage": 'null'
+    }
     
     await logging("response", response_body, trace_code)
     return response_body

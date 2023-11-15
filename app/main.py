@@ -3,7 +3,10 @@ import uuid
 from dataclasses import dataclass, asdict
 from fastapi import  FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
 from .predict import predict_router
+from .models import model
 
 
 @dataclass
@@ -46,5 +49,18 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
+
+@app.exception_handler(model.CustomValidationException)
+async def unicorn_exception_handler(request: Request, exc: model.CustomValidationException):
+    return JSONResponse(
+        status_code=422,
+        content= {
+            "resultFlag": False,
+            "resultData": None,
+            "errCode": "422",
+            "errMessage": "Validation Error",
+            "errDetailMessage": str({exc.message})
+        },
+    )
 
 app.include_router(predict_router.router)
