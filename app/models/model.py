@@ -30,6 +30,30 @@ class InputModel(BaseModel):
             return value
         except ValueError:
             raise CustomValidationException("올바른 날짜 및 시간 형식이 아닙니다. 'yyyy-mm-dd hh:mm:ss' 형식을 사용하세요.")
+    
+    @validator("waitingno", "customercnt")
+    def validate_waiting_customercnt(cls, value):
+        if not isinstance(value, int) or value <= 0:
+            raise CustomValidationException("1 이상 자연수를 입력하세요.")
+        return value
+    
+    @validator("daytype")
+    def validate_daytype(cls, value):
+        if value not in (1, 2, 3):
+            raise CustomValidationException("날짜 형식은 1, 2, 3 중 하나입니다.")
+        return value
+
+    @validator("teamahead")
+    def validate_teamahead(cls, value):
+        if not isinstance(value, int) or value < 0:
+            raise CustomValidationException("내 앞 대기 팀 수는 0 또는 양수입니다.")
+        return value
+
+    @validator("customergroupcnt")
+    def validate_customergroupcnt(cls, value):
+        if value not in (2, 4, 6):
+            raise CustomValidationException("고객 그룹 수는 2, 4, 6 중 하나입니다.")
+        return value
 
 class OutputModel(BaseModel):
     resultFlag : bool
