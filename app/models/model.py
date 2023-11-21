@@ -17,7 +17,7 @@ class InputModel(BaseModel):
 
     @validator('plantcode')
     def check_plantcode(cls, value):
-        allowed_values = {'AL132', 'AL306', 'AL334', 'AL337', 'AL338'}
+        allowed_values = {'AL108', 'AL132', 'AL133', 'AL184', 'AL210', 'AL297', 'AL304', 'AL326', 'AL333', 'AL343', 'JB013', 'PM241', 'RI110', 'RU019'}
         if value not in allowed_values:
             raise CustomValidationException(f"매장코드를 정확히 입력해주세요. {allowed_values}")
         return value

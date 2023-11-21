@@ -3,10 +3,6 @@ import pandas as pd
 from datetime import datetime
 from scipy.special import inv_boxcox
 
-from app.models.model import CustomValidationException
-
-week_df = pd.read_csv('app/utils/week_int.csv')
-
 # week_no 1년(52주) 중 해당 날짜가 속한 주
 # week_int 월별 주차정보 (1~5)
 # dayno 1 : 일 / 2 : 월 / 3 : 화 / 4 : 수 / 5 : 목 / 6 : 금 / 7 : 토
@@ -23,7 +19,6 @@ async def transform_dataframe(request_body: dict) -> pd.DataFrame():
         'plantcode_L' : transform_plantcode(request_body['plantcode']),
         'week_no' : extract_week(date_str),
         'waitingno' : request_body['waitingno'],
-        'week_int' : extract_week_int(date_str),
         'dayno' : extract_dayno(date_str),
         'daytype' : request_body['daytype'],
         'regihour' : regihour,
@@ -37,19 +32,28 @@ async def transform_dataframe(request_body: dict) -> pd.DataFrame():
 
 async def transform_boxcox(predict: int) -> int:
     # 1. Box-cox 변환
-    lambda_value = 0.3229772566823217
+    lambda_value = 0.20776504963895437
     predict_boxcox = inv_boxcox(predict[0], lambda_value)
     # 2. (분) 환산 (올림)
     prediction = int(predict_boxcox/60)+1
     return prediction
-    
+
 def transform_plantcode(plantcode: str) -> int:
     plantcode_mapping = {
-        'AL132': 0, 
-        'AL306': 1, 
-        'AL334': 2,
-        'AL337': 3,
-        'AL338': 4
+        'AL108' : 0, 
+        'AL132' : 1, 
+        'AL133' : 2, 
+        'AL184' : 3, 
+        'AL210' : 4, 
+        'AL297' : 5, 
+        'AL304' : 6, 
+        'AL326' : 7, 
+        'AL333' : 8, 
+        'AL343' : 9, 
+        'JB013' : 10, 
+        'PM241' : 11, 
+        'RI110' : 12, 
+        'RU019' : 13,
     }
     return plantcode_mapping.get(plantcode, -1)
 
@@ -67,10 +71,3 @@ def extract_week(date_str: str) -> int:
 
 def extract_dayno(date_str: str) -> int:
       return (datetime.strptime(date_str, '%Y-%m-%d').weekday() + 2) % 7 or 7
-
-def extract_week_int(date_str: str)-> int:
-    try:
-        week_int = week_df[week_df['date']==date_str]['week_int'].values[0]
-        return week_int
-    except:
-        raise CustomValidationException("No week int, date 형식 확인")
