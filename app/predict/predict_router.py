@@ -9,7 +9,7 @@ from app.utils.logger_utils import Logger
 from app.utils.transform_data import transform_boxcox, transform_dataframe
 
 router = APIRouter()
-MODEL = joblib.load('models/LGBM_v1.1.pkl')
+MODEL = joblib.load('models/LGBM_V2.0.pkl')
 LOGGER = Logger()
 
 @router.post("/predict", response_model=OutputModel)

@@ -32,7 +32,8 @@ async def transform_dataframe(request_body: dict) -> pd.DataFrame():
 
 async def transform_boxcox(predict: int) -> int:
     # 1. Box-cox 변환
-    lambda_value = 0.20776504963895437
+    with open('models/lambda_value.txt', 'r') as f:
+        lambda_value = float(f.read())
     predict_boxcox = inv_boxcox(predict[0], lambda_value)
     # 2. (분) 환산 (올림)
     prediction = int(predict_boxcox/60)+1
