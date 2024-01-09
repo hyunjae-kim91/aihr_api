@@ -15,13 +15,6 @@ class InputModel(BaseModel):
     customercnt: int = Field(default=2)
     customergroupcnt: int = Field(default=2)
 
-    @validator('plantcode')
-    def check_plantcode(cls, value):
-        allowed_values = {'AL108', 'AL132', 'AL133', 'AL184', 'AL210', 'AL297', 'AL304', 'AL326', 'AL333', 'AL343', 'JB013', 'PM241', 'RI110', 'RU019'}
-        if value not in allowed_values:
-            raise CustomValidationException(f"매장코드를 정확히 입력해주세요. {allowed_values}")
-        return value
-
     @validator("regidatetime")
     def validate_regitime_format(cls, value):
         try:
@@ -54,6 +47,13 @@ class InputModel(BaseModel):
         if value not in (2, 4, 6):
             raise CustomValidationException("고객 그룹 수는 2, 4, 6 중 하나입니다.")
         return value
+
+    # @validator('plantcode')
+    # def check_plantcode(cls, value):
+    #     allowed_values = {'AL108', 'AL132', 'AL133', 'AL184', 'AL210', 'AL297', 'AL304', 'AL326', 'AL333', 'AL343', 'JB013', 'PM241', 'RI110', 'RU019'}
+    #     if value not in allowed_values:
+    #         raise CustomValidationException(f"매장코드를 정확히 입력해주세요. {allowed_values}")
+    #     return value
 
 class OutputModel(BaseModel):
     resultFlag : bool
