@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 from utils.s3_connector import s3Connector
