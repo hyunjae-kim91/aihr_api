@@ -137,4 +137,3 @@ task-definition.json
 .github
 task-definition.json
 src/*
-models/*
