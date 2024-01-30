@@ -6,7 +6,7 @@ from fastapi import APIRouter, Request
 
 from app.models.model import InputModel, OutputModel
 from app.utils.logger_utils import Logger
-from app.utils.transform_data import transform_boxcox, transform_dataframe
+from app.utils.transform_data import transform_boxcox, transform_dataframe, transform_second_to_minute, replace_under_ten_minutes
 
 router = APIRouter()
 MODEL = joblib.load('models/LGBM_V2.0.pkl')
@@ -25,7 +25,10 @@ async def predict_wating_time(
         input_data,
         num_iteration=MODEL.best_iteration
         )
-    prediction = await transform_boxcox(predict)
+    prediction_boxcox = await transform_boxcox(predict)
+    prediction_minute = await transform_second_to_minute(prediction_boxcox)
+    prediction = await replace_under_ten_minutes(prediction_minute)
+
     response_body = {
         "resultFlag": True,
         "resultData": prediction,

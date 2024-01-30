@@ -1,8 +1,8 @@
 import yaml
+from datetime import datetime
 
 from typing import Tuple
 import pandas as pd
-from datetime import datetime
 from scipy.special import inv_boxcox
 
 # week_no 1년(52주) 중 해당 날짜가 속한 주
@@ -20,14 +20,18 @@ with open('models/plantcode_mapping.yaml', 'r') as file:
 with open('models/lambda_value.txt', 'r') as f:
     lambda_value = float(f.read())
 
+async def replace_under_ten_minutes(time):
+    return 10 if time <= 10 else time
 
-def transform_plantcode(plantcode: str) -> int:
-    return plantcode_mapping.get(plantcode, -1)
+async def transform_second_to_minute(second):
+    return int(second/60)+1
 
 async def transform_boxcox(predict: int) -> int:
     predict_boxcox = inv_boxcox(predict[0], lambda_value)
-    prediction = int(predict_boxcox/60)+1
-    return prediction
+    return predict_boxcox
+
+def transform_plantcode(plantcode: str) -> int:
+    return plantcode_mapping.get(plantcode, -1)
 
 def transform_time(date_str: str) -> Tuple[int, int, int]:
     hour, minute, second = map(int, date_str.split(':'))
