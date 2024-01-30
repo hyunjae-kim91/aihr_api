@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y cron
 
 COPY cronjob.sh /etc/cron.d/cronjob.sh
 RUN chmod 777 /etc/cron.d/cronjob.sh
-RUN crontab /etc/cron.d/cronjob.sh
 CMD ["cron", "f"]
 
 # python 라이브러리 설치
