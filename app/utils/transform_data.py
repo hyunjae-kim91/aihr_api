@@ -26,6 +26,10 @@ async def replace_under_ten_minutes(time):
 async def transform_second_to_minute(second):
     return int(second/60)+1
 
+# 외식SIO 요청 버퍼 10% 추가 (수정 : 김현재, 2024-03-15)
+async def add_buffer(second):
+    return second*1.1
+
 async def transform_boxcox(predict: int) -> int:
     predict_boxcox = inv_boxcox(predict[0], lambda_value)
     return predict_boxcox

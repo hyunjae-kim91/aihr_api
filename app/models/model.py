@@ -7,11 +7,11 @@ class CustomValidationException(Exception):
 
 class InputModel(BaseModel):
     """input parameter"""
-    plantcode: str = Field(default='AL306')
-    waitingno: int = Field(default=1)
-    daytype: int = Field(default=1)
-    regidatetime: str = Field(default='2023-11-01 10:00:00')
-    teamahead: int = Field(default=0)
+    plantcode: str = Field(default='AL132')
+    waitingno: int = Field(default=10)
+    daytype: int = Field(default=3)
+    regidatetime: str = Field(default='2024-03-01 12:00:00')
+    teamahead: int = Field(default=5)
     customercnt: int = Field(default=2)
     customergroupcnt: int = Field(default=2)
 
