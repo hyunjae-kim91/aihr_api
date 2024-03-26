@@ -21,4 +21,4 @@ for FILE_NAME in FILE_NAME_LIST:
     )
 
 today = datetime.today().strftime('%Y-%m-%d')
-slack.send_message(f"{today} 예측모델 다운로드 완료")
+slack.send_message(f"{today} 예측모델 다운로드 완료_태블릿")
