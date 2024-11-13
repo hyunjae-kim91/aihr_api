@@ -1,0 +1,30 @@
+[
+    {
+        "employee_id": "99999999",
+        "employee_name": "홍길동",
+        "position_level": "대리",
+        "position_duration": 2.2,
+        "job_title": "팀원",
+        "department": "AI빅데이터사업부 Data Science팀",
+        "job_type": "Data Analytics",
+        "employee_age": 32,
+        "employee_gender": "남",
+        "talent_type_ai": ["전략형", "분석형"],
+        "talent_type_profile": ["조력형", "분석형"],
+        "supporting_statement": "[2024년 상반기 성과평가] 벡터 DB를 활용 AI인재검색기"
+    },
+    {
+        "employee_id": "11111111",
+        "employee_name": "지서현",
+        "position_level": "주임",
+        "position_duration": 1.2,
+        "job_title": "팀원",
+        "department": "AI빅데이터사업부 Data Science팀",
+        "job_type": "Data Engineer",
+        "employee_age": 28,
+        "employee_gender": "여",
+        "talent_type_ai": ["개척형(확장)", "실행형", "분석형"],
+        "talent_type_profile": ["협상형(외교)", "분석형"],
+        "supporting_statement": "[2024년 상반기 성과평가] 벡터 DB를 활용 AI인재검색기"
+    }
+]

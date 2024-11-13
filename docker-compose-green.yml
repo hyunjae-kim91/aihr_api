@@ -1,7 +1,7 @@
 version: '2.0'
 services:
   wating_time_predict-green:
-    container_name: wating_time_predict-green
+    container_name: aihr_api-green
     build:
       context: .
       dockerfile: Dockerfile

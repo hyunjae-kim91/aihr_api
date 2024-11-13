@@ -13,8 +13,8 @@ from .models import model
 class AppConfig:
     version: str = "v0.1"
     prefix: str = ""
-    title: str = "predict_waiting_time"
-    description: str = "predict_waiting_time"
+    title: str = "aihr_recommend"
+    description: str = "aihr_recommend"
 
 
 app = FastAPI(**asdict(AppConfig()))
