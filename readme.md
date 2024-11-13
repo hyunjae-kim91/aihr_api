@@ -1,9 +1,7 @@
-레스토랑 대시시간 예측
-
 Docker image 
-1. sudo docker build -t predict:v1.x .
+1. sudo docker build -t recommend:v1.x .
 2. sudo docker images
-3. sudo docker run -d -p 8000:8000 predict:v1.x
+3. sudo docker run -d -p 8000:8000 recommend:v1.x
 
 Local
 
