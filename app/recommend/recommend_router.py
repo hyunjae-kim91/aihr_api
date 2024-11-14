@@ -20,7 +20,7 @@ async def recommend_waiting_time(
     await logging("request", request_body, trace_code)
 
     # JSON 파일에서 resultData 불러오기
-    with open("employee_details.json", "r", encoding="utf-8") as file:
+    with open("recommend_test_data.json", "r", encoding="utf-8") as file:
         employee_data = json.load(file)
 
     # OutputModel 형식으로 응답 생성

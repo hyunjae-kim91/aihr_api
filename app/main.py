@@ -4,8 +4,9 @@ from dataclasses import dataclass, asdict
 from fastapi import  FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 
-from .predict import predict_router
+from .recommend import recommend_router
 from .models import model
 
 
@@ -50,8 +51,8 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-@app.exception_handler(model.CustomValidationException)
-async def unicorn_exception_handler(request: Request, exc: model.CustomValidationException):
+@app.exception_handler(RequestValidationError)
+async def unicorn_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=422,
         content= {
@@ -63,4 +64,4 @@ async def unicorn_exception_handler(request: Request, exc: model.CustomValidatio
         },
     )
 
-app.include_router(predict_router.router)
+app.include_router(recommend_router.router)
