@@ -1,6 +1,5 @@
-version: '2.0'
 services:
-  wating_time_predict-blue:
+  aihr_api-blue:
     container_name: aihr_api-blue
     build:
       context: .
