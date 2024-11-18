@@ -1,8 +1,0 @@
-services:
-  aihr_api-green:
-    container_name: aihr_api-green
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '8002:8000'
