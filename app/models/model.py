@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field, validator
-from datetime import datetime
 from typing import List, Optional
 
-class InputModel(BaseModel):
+# 1. 인재 추천 모델
+class RecommendInputModel(BaseModel):
     """input parameter"""
     input_prompt: str = Field(..., description="질의문")
     input_user: str = Field(..., description="사용자명")
@@ -30,8 +30,42 @@ class EmployeeDetailModel(BaseModel):
     talent_type_profile: List[str]
     supporting_statement: str
 
-class OutputModel(BaseModel):
+class RecommendResultDataModel(BaseModel):
+    """resultData 필드"""
+    response_prompt: str = ""
+    recommendation: List[EmployeeDetailModel]
+
+class RecommendOutputModel(BaseModel):
+    """전체 응답 모델"""
     resultFlag: bool = Field(..., description="처리 성공 여부")
-    resultData: Optional[List[EmployeeDetailModel]] = Field(default=[], description="결과 데이터")
+    resultData: Optional[RecommendResultDataModel] = Field(default=None, description="결과 데이터")
+    errCode: Optional[str] = None
+    errMessage: Optional[str] = None
+
+# 2. 인재 유형 모델
+
+class InfotypeInputModel(BaseModel):
+    """input parameter"""
+    input_user: str = Field(..., description="사용자명")
+    pernr: str = Field(..., description="사번")
+
+class HashtagModel(BaseModel):
+    hashtag: str
+    supporting_sentence: str
+
+class HashtagKeywordsModel(BaseModel):
+    talent_type_ai: str
+    hashtag_list: List[HashtagModel]
+
+class InfotypeOutputDetailModel(BaseModel):
+    employee_id: str
+    summarize: str
+    talent_type_ai: List[str]
+    talent_type_profile: List[str]
+    hashtag_keywords: List[HashtagKeywordsModel]
+
+class InfotypeOutputModel(BaseModel):
+    resultFlag: bool = Field(..., description="처리 성공 여부")
+    resultData: Optional[InfotypeOutputDetailModel] = Field(default=None, description="결과 데이터")
     errCode: Optional[str] = None
     errMessage: Optional[str] = None
