@@ -7,6 +7,7 @@ from fastapi import APIRouter, Request
 from app.models.model import RecommendInputModel, EmployeeDetailModel, RecommendResultDataModel, RecommendOutputModel
 from app.models.model import InfotypeOutputModel, InfotypeInputModel, InfotypeOutputDetailModel, HashtagKeywordsModel, HashtagModel
 from app.utils.logger_utils import Logger
+from db.db_function import execute_all_sql, get_query
 
 router = APIRouter()
 LOGGER = Logger()
@@ -20,7 +21,7 @@ async def get_recommendation(
     trace_code = request.state.trace_code
     await logging("request", request_body, trace_code)
 
-    with open("recommend_test_data.json", "r", encoding="utf-8") as file:
+    with open("src/recommend_test_data.json", "r", encoding="utf-8") as file:
         employee_data = json.load(file)
 
     response_body = RecommendOutputModel(
@@ -45,29 +46,40 @@ async def get_infotype(
     request: Request
 ):
     # JSON 파일에서 데이터 로드
-    with open("infotype_test_data.json", "r", encoding="utf-8") as file:
+    with open("src/infotype_test_data.json", "r", encoding="utf-8") as file:
         json_data = json.load(file)
 
-    response_data = json_data.get('resultData')
+    info_type = json_data.get('resultData').get('infotype')
     
     return InfotypeOutputModel(
         resultFlag=True,
         resultData=InfotypeOutputDetailModel(
-            employee_id=response_data["infotype"]["employee_id"],
-            summarize=response_data["infotype"]["summarize"],
-            talent_type_ai=response_data["infotype"]["talent_type_ai"],
-            talent_type_profile=response_data["infotype"]["talent_type_profile"],
-            hashtag_keywords=[HashtagKeywordsModel(
-                talent_type_ai=info_type["talent_type_ai"],
-                hashtag_list=[HashtagModel(
-                    hashtag=hashtag["hashtag"],
-                    supporting_sentence=hashtag["supporting_sentence"]
-                ) for hashtag in info_type["hashtag_list"]]
-            ) for info_type in response_data["infotype"]["hashtag_keywords"]]
+            empno=info_type["empno"],
+            smry_st=info_type["smry_st"],
+            tltp_ai=info_type["tltp_ai"],
+            tltp_prof=info_type["tltp_prof"],
+            tltp_htag_list=[HashtagKeywordsModel(
+                tltp=info_type["tltp"],
+                htag_list=[HashtagModel(
+                    htag=hashtag["htag"],
+                    bss_st=hashtag["bss_st"]
+                ) for hashtag in info_type["htag_list"]]
+            ) for info_type in info_type["tltp_htag_list"]]
         ),
         errCode=None,
         errMessage=None
     )
+
+@router.post("/test")
+async def get_test(
+    request: Request
+):
+    query = get_query(SQL_PATH='sql',SQL_FILE='test.sql')
+    test_data = execute_all_sql(query)
+    return {
+        'Result' : dict(test_data)
+    }
+
 async def logging(division: str, data: dict, trace_code: str) -> None:
     """logging json body"""
     data["trace_code"] = trace_code

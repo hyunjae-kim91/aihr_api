@@ -136,4 +136,4 @@ task-definition.json
 # github action
 .github
 task-definition.json
-src/*
+*.ipynb

@@ -6,20 +6,15 @@ EXIST_BLUE=$(docker-compose ps | grep aihr_api-blue)
 EXIST_GREEN=$(docker-compose ps | grep aihr_api-green)
 
 ensure_nginx_running() {
-    if ! docker ps | grep -q "$NGINX_CONTAINER"; then
-        echo "Nginx container is not running. Starting Nginx..."
-        
-        # nginx 빌드 추가
-        docker-compose build nginx || { echo "Failed to build Nginx container"; exit 1; }
-        
-        # 먼저 nginx와 네트워크를 함께 실행하여 연결을 보장
-        docker-compose up -d nginx || { echo "Failed to start Nginx container"; exit 1; }
-        
-        # Nginx가 정상적으로 연결되었는지 확인
-        if ! docker inspect --format '{{.State.Running}}' "$NGINX_CONTAINER" | grep -q "true"; then
-            echo "Nginx container failed to start correctly.";
-            exit 1;
-        fi
+    echo "Stopping Nginx container (if running)..."
+    docker-compose down nginx || { echo "Failed to stop Nginx container"; exit 1; }
+    echo "Building and starting Nginx container..."
+    docker-compose build nginx || { echo "Failed to build Nginx container"; exit 1; }
+    docker-compose up -d nginx || { echo "Failed to start Nginx container"; exit 1; }
+
+    if ! docker inspect --format '{{.State.Running}}' "$NGINX_CONTAINER" | grep -q "true"; then
+        echo "Nginx container failed to start correctly."
+        exit 1
     fi
 }
 

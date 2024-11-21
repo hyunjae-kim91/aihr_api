@@ -17,18 +17,18 @@ class RecommendInputModel(BaseModel):
 
 class EmployeeDetailModel(BaseModel):
     """직원 세부 정보"""
-    employee_id: str
-    employee_name: str
-    position_level: str
-    position_duration: float
-    job_title: str
-    department: str
-    job_type: str
-    employee_age: int
-    employee_gender: str
-    talent_type_ai: List[str]
-    talent_type_profile: List[str]
-    supporting_statement: str
+    empno: str
+    emp_nm: str
+    jbps: str
+    jbps_prd: float
+    jbttl: str
+    ogdp: str
+    ocpt: str
+    emp_age: int
+    emp_gndr: str
+    tltp_ai: List[str]
+    tltp_prof: List[str]
+    bss_st: str
 
 class RecommendResultDataModel(BaseModel):
     """resultData 필드"""
@@ -50,19 +50,19 @@ class InfotypeInputModel(BaseModel):
     pernr: str = Field(..., description="사번")
 
 class HashtagModel(BaseModel):
-    hashtag: str
-    supporting_sentence: str
+    htag: str
+    bss_st: str
 
 class HashtagKeywordsModel(BaseModel):
-    talent_type_ai: str
-    hashtag_list: List[HashtagModel]
+    tltp: str
+    htag_list: List[HashtagModel]
 
 class InfotypeOutputDetailModel(BaseModel):
-    employee_id: str
-    summarize: str
-    talent_type_ai: List[str]
-    talent_type_profile: List[str]
-    hashtag_keywords: List[HashtagKeywordsModel]
+    empno: str
+    smry_st: str
+    tltp_ai: List[str]
+    tltp_prof: List[str]
+    tltp_htag_list: List[HashtagKeywordsModel]
 
 class InfotypeOutputModel(BaseModel):
     resultFlag: bool = Field(..., description="처리 성공 여부")

@@ -50,7 +50,6 @@ class DBConnector(metaclass=Singleton):
         return self.session
 
 dbConnector = DBConnector(**asdict(DBConfig()))
-print(asdict(DBConfig()))
 session = dbConnector.create_session()
 session.execute(text("select 1"))
 session.close()

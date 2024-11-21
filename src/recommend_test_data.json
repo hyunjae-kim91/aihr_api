@@ -1,0 +1,38 @@
+{
+	"resultFlag": true,
+	"resultData": {
+        "response_prompt" : "",
+        "recommendation": [
+            {
+                "empno" : "99999999",
+                "emp_nm" : "홍길동",
+                "jbps" : "대리",
+                "jbps_prd" : 2.2,
+                "jbttl" : "팀원",
+                "ogdp" : "AI빅데이터사업부 Data Science팀",
+                "ocpt" : "Data Analytics",
+                "emp_age" : 32,
+                "emp_gndr" : "남",
+                "tltp_ai" : ["전략형","분석형"],
+                "tltp_prof" : ["조력형","분석형"],
+                "bss_st" : "[2024년 상반기 성과평가] 벡터 DB를 활용 AI인재검색기"
+            },
+            {
+                "empno" : "11111111",
+                "emp_nm" : "지서현",
+                "jbps" : "주임",
+                "jbps_prd" : 1.2,
+                "jbttl" : "팀원",
+                "ogdp" : "AI빅데이터사업부 Data Science팀",
+                "ocpt" : "Data Engineer",
+                "emp_age" : 28,
+                "emp_gndr" : "여",
+                "tltp_ai" : ["개척형(확장)","실행형","분석형"],
+                "tltp_prof" : ["협상형(외교)","분석형"],
+                "bss_st" : "[2024년 상반기 성과평가] 벡터 DB를 활용 AI인재검색기"
+            }
+        ]
+    },
+	"errCode": null,
+	"errMessage": null
+}
